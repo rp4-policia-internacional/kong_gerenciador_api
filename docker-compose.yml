@@ -1,0 +1,50 @@
+version: "3.8"
+services:
+  bancodados:
+    image: postgres:latest
+    environment:
+      - POSTGRES_PASSWORD=value
+    ports: 
+      - 2020:5432
+    networks:
+      - kong-net
+
+  aplicacaocaptura:
+    image: rp4/captura:latest
+    environment:
+      - DATABASE_URL=postgresql://postgres:value@bancodados:5432/captura?schema=public
+    ports: 
+      - 3333:3333 
+    networks:
+      - kong-net
+  
+  aplicacaovitima:
+    image: rp4/vitima:latest
+    environment:
+      - DATABASE_URL=postgresql://postgres:value@bancodados:5432/vitima?schema=public
+    ports: 
+      - 3337:3333 
+    networks:
+      - kong-net
+
+  aplicacaocriminoso:
+    image: rp4/criminoso:latest
+    environment:
+      - DATABASE_URL=postgresql://postgres:value@bancodados:5432/criminoso?schema=public
+      - PORT=3333
+    ports: 
+      - 3338:3333 
+    networks:
+      - kong-net
+
+  aplicacaoextradicao:
+    image: rp4/extradicao:latest
+    environment:
+      - DATABASE_URL=postgresql://postgres:value@bancodados:5432/extradicao?schema=public
+    ports: 
+      - 3336:3333 
+    networks:
+      - kong-net
+networks:
+  kong-net:
+    external: true
